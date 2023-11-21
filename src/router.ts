@@ -5,7 +5,7 @@ const router = Router();
 // PRODUCT
 
 router.get("/product", (req, res) => {
-	res.json({ message: "hello" });
+	res.json({ message: req.shh_secret });
 });
 router.post("/product", () => {});
 
