@@ -1,5 +1,5 @@
 import prisma from "../db";
-import { comparePassword, createJWT, hashPassword } from "../modules/auth";
+import { comparePasswords, createJWT, hashPassword } from "../modules/auth";
 
 export const createNewUser = async (req, res) => {
 	const user = await prisma.user.create({
@@ -22,7 +22,7 @@ export const signIn = async (req, res) => {
 	});
 
 	// look at the hashed password
-	const isValid = await comparePassword(req.body.password, user.password);
+	const isValid = await comparePasswords(req.body.password, user.password);
 
 	if (!isValid) {
 		res.status(401);
