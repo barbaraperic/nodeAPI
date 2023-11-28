@@ -21,7 +21,7 @@ export const signIn = async (req, res) => {
 		},
 	});
 
-	// look at the hashed password
+	// looks at the hashed password
 	const isValid = await comparePasswords(req.body.password, user.password);
 
 	if (!isValid) {

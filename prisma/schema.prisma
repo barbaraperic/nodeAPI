@@ -46,6 +46,7 @@ model Update {
   productId   String
   product     Product       @relation(fields: [productId], references: [id])
   updatePoint UpdatePoint[]
+  @@unique([id, productId])
 }
 
 model UpdatePoint {
