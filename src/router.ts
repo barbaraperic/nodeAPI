@@ -84,4 +84,9 @@ router.put(
 );
 router.delete("/updatepoint/:id", () => {});
 
+router.use((err, req, res, next) => {
+	console.log(err);
+	res.json({ message: "in router handler" });
+});
+
 export default router;
