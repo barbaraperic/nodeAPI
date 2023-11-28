@@ -46,11 +46,10 @@ router.get("/update/:id", getOneUpdate);
 
 router.put(
 	"/update/:id",
-	body("title").exists(),
-	body("body").exists(),
-	body("version").optional(),
+	body("title").optional(),
+	body("body").optional(),
 	body("status").isIn(["IN_PROGRESS", "SHIPPED", "DEPRECATED"]).optional(),
-	handleInputErrors,
+	body("version").optional(),
 	updateUpdate
 );
 

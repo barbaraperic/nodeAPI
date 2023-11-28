@@ -33,19 +33,25 @@ export const getOneUpdate = async (req, res) => {
 // create update
 export const createUpdate = async (req, res) => {
 	// 1. does product belong to you
+
+	const { productId, ...rest } = req.body;
 	const product = await prisma.product.findUnique({
 		where: {
 			id: req.body.productId,
 		},
 	});
 
-	if (product) {
+	if (!product) {
 		// does not belong to the user
 		res.json({ message: "nope" });
 	}
 
 	const update = await prisma.update.create({
-		data: req.body,
+		data: {
+			title: req.body.title,
+			body: req.body.body,
+			product: { connect: { id: product.id } },
+		},
 	});
 
 	res.json({ data: update });
@@ -54,7 +60,6 @@ export const createUpdate = async (req, res) => {
 // update an update
 
 export const updateUpdate = async (req, res) => {
-	// does product belong to you
 	const products = await prisma.product.findMany({
 		where: {
 			belongsToId: req.user.id,
@@ -65,13 +70,14 @@ export const updateUpdate = async (req, res) => {
 	});
 
 	const updates = products.reduce((allUpdates, product) => {
-		return [...allUpdates, product.updates];
+		return [...allUpdates, ...product.updates];
 	}, []);
 
 	const match = updates.find((update) => update.id === req.params.id);
 
 	if (!match) {
-		return res.json({ message: "Nope" });
+		// handle this
+		return res.json({ message: "nope" });
 	}
 
 	const updatedUpdate = await prisma.update.update({
@@ -87,7 +93,6 @@ export const updateUpdate = async (req, res) => {
 // delete an update
 
 export const deleteUpdate = async (req, res) => {
-	// does product belong to you
 	const products = await prisma.product.findMany({
 		where: {
 			belongsToId: req.user.id,
@@ -98,20 +103,21 @@ export const deleteUpdate = async (req, res) => {
 	});
 
 	const updates = products.reduce((allUpdates, product) => {
-		return [...allUpdates, product.updates];
+		return [...allUpdates, ...product.updates];
 	}, []);
 
 	const match = updates.find((update) => update.id === req.params.id);
 
 	if (!match) {
-		return res.json({ message: "Nope" });
+		// handle this
+		return res.json({ message: "nope" });
 	}
 
-	const deletedUpdate = await prisma.update.delete({
+	const deleted = await prisma.update.delete({
 		where: {
 			id: req.params.id,
 		},
 	});
 
-	res.json({ data: deletedUpdate });
+	res.json({ data: deleted });
 };
